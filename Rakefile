@@ -8,10 +8,7 @@ Bundler.require :default
 
 Motion::Project::App.setup do |app|
   app.name = 'blocks'
-
-  Dir.glob("lib/motion-cocos2d/**/*.*").each do |file|
-    app.files.unshift file
-  end
+  app.files_dependencies "app/app_delegate.rb" => ["app/commons/cocos2d_app_delegate.rb", "app/commons/touch_sprite.rb"]
 
   app.pods do 
     pod do |s|

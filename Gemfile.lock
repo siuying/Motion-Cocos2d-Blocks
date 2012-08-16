@@ -5,6 +5,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.3.2)
+    bubble-wrap (1.1.2)
     cocoapods (0.11.1)
       activesupport (~> 3.2.6)
       colored (~> 1.2)
@@ -43,4 +44,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bubble-wrap
   motion-cocoapods
