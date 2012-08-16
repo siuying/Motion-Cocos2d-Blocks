@@ -1,0 +1,7 @@
+PODS:
+  - cocos2d (2.0.0):
+    - cocos2d/CocosDenshion (= 2.0.0)
+  - cocos2d/CocosDenshion (2.0.0)
+
+DEPENDENCIES:
+  - cocos2d (defined in Podfile)
