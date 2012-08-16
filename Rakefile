@@ -3,8 +3,8 @@ $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
 require 'rubygems'
 require 'bundler'
-
 Bundler.require :default
+
 
 Motion::Project::App.setup do |app|
   app.name = 'blocks'
@@ -43,6 +43,24 @@ Motion::Project::App.setup do |app|
       def s.copy_header_mapping(from)
         from.relative_path_from(Pathname.new('cocos2d'))
       end
+    end
+  end
+end
+
+## automate image preparation
+
+require 'fileutils'
+task :prepare do
+  # rename @2x files to -hd file
+  FileList["resources_src/block/*@2x.png"].each do |filename|
+    new_filename = filename.gsub(/@2x.png$/, '-hd.png')
+    FileUtils.cp(filename, new_filename)
+  end
+
+  # copy files to resources
+  FileList["resources_src/block/*.png"].each do |filename|
+    unless filename =~ /@2x.png$/
+      FileUtils.cp(filename, "resources/#{File.basename(filename)}")
     end
   end
 end
