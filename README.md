@@ -4,7 +4,7 @@ A simple puzzle game built using RubyMotion and cocos2D for iPhone.
 
 The game concept is based on [MobiGame](http://itunes.apple.com/us/app/mobigame/id548210182?ls=1&mt=8).
 
-![](https://raw.github.com/siuying/Motion-Cocos2d-BlockGame/master/docs/screen.png)
+![](https://raw.github.com/siuying/Motion-Cocos2d-Blocks/master/docs/screen.png)
 
 ## Why?
 
