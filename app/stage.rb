@@ -40,14 +40,18 @@ class Stage < CCLayer
       self.removeChild(block, cleanup:true)
     end
 
-    # for empty holds, drop the rows down
-    @rows.each do |row|
-      row.each_with_index do |block, index|
-        block.y = index
+    # for empty hole, drop the blocks above them down
+    @skipped = []
+    @rows.each_with_index do |row, x_index|
+      @skipped << x_index if row.size == 0
+
+      row.each_with_index do |block, y_index|
+        block.x = x_index - @skipped.size
+        block.y = y_index
         block.position = position_with_coordinate(block.x, block.y, block.contentSize.width)
       end
     end
-
+    @rows = @rows.select {|r| r.size > 0 }
     @removed = []
   end
 
