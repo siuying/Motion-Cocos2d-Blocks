@@ -276,11 +276,10 @@ static CCDirector *_sharedDirector = nil;
 - (void) setAlphaBlending: (BOOL) on
 {
 	if (on) {
-		ccGLEnable(CC_GL_BLEND);
 		ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
 
 	} else
-		glDisable(GL_BLEND);
+		ccGLBlendFunc(GL_ONE, GL_ZERO);
 
 	CHECK_GL_ERROR_DEBUG();
 }
@@ -367,6 +366,7 @@ static CCDirector *_sharedDirector = nil;
 - (void)runWithScene:(CCScene*) scene
 {
 	NSAssert( scene != nil, @"Argument must be non-nil");
+	NSAssert(runningScene_ == nil, @"This command can only be used to start the CCDirector. There is already a scene present.");
 
 	[self pushScene:scene];
 	[self startAnimation];
@@ -374,6 +374,7 @@ static CCDirector *_sharedDirector = nil;
 
 -(void) replaceScene: (CCScene*) scene
 {
+	NSAssert( runningScene_, @"Use runWithScene: instead to start the director");
 	NSAssert( scene != nil, @"Argument must be non-nil");
 
 	NSUInteger index = [scenesStack_ count];

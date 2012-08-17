@@ -39,8 +39,8 @@
  */
 
 // 0x00 HI ME LO
-// 00   02 00 00
-#define COCOS2D_VERSION 0x00020000
+// 00   02 01 00
+#define COCOS2D_VERSION 0x00020100
 
 
 //
@@ -112,6 +112,7 @@
 #import "CCRenderTexture.h"
 #import "CCMotionStreak.h"
 #import "CCConfiguration.h"
+#import "CCDrawNode.h"
 
 // Shaders
 #import "CCGLProgram.h"
@@ -159,6 +160,9 @@
 #import "Support/ccUtils.h"
 #import "Support/TransformUtils.h"
 #import "Support/CCProfiling.h"
+#import "Support/NSThread+performBlock.h"
+#import "Support/uthash.h"
+#import "Support/utlist.h"
 
 //
 // external
@@ -168,9 +172,18 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // free functions
 NSString * cocos2dVersion(void);
 
+#ifdef __cplusplus
+}
+#endif
+
+	
 #ifdef __CC_PLATFORM_IOS
 #ifndef __IPHONE_4_0
 #error "If you are targeting iPad, you should set BASE SDK = 4.0 (or 4.1, or 4.2), and set the 'iOS deploy target' = 3.2"
