@@ -4,4 +4,5 @@ resources/*.nib
 resources/*.momd
 resources/*.storyboardc
 vendor/Pods/Pods.xcodeproj/project.pbxproj
+vendor/Pods/build-*/
 .dat*.*
