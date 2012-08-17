@@ -47,14 +47,16 @@ end
 
 require 'fileutils'
 task :prepare do
+  files = FileList["resources_src/block/*@2x.png"] + FileList["resources_src/button_reset/*@2x.png"]
+
   # rename @2x files to -hd file
-  FileList["resources_src/block/*@2x.png"].each do |filename|
+  files.each do |filename|
     new_filename = filename.gsub(/@2x.png$/, '-hd.png')
     FileUtils.cp(filename, new_filename)
   end
 
   # copy files to resources
-  FileList["resources_src/block/*.png"].each do |filename|
+  files.each do |filename|
     unless filename =~ /@2x.png$/
       FileUtils.cp(filename, "resources/#{File.basename(filename)}")
     end

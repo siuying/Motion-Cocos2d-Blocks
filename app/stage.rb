@@ -1,7 +1,9 @@
 class Stage < CCLayer
   PAGE_MARGIN = 14.0
 
+  attr_reader :score_label
   attr_reader :rows, :cols
+  attr_reader :score
 
   ## CCNode Life Cycle
 
@@ -14,7 +16,8 @@ class Stage < CCLayer
   def onEnter
     super
 
-    setup_scene
+    setup_ui
+    setup_scene    
     setup_observers
   end
 
@@ -49,7 +52,7 @@ class Stage < CCLayer
   end
 
   # reset the scene
-  def reset
+  def reset(sender)
     @blocks.each do |block|
       self.removeChild(block, cleanup:true)
     end
@@ -101,11 +104,28 @@ class Stage < CCLayer
   end
 
   private
+  def setup_ui
+    @score_label              = CCLabelTTF.labelWithString("Score: 0", fontName:"AppleGothic", fontSize:20, dimensions:[200, 24], hAlignment:KCCTextAlignmentLeft)
+    @score_label.position     = [0, 0]
+    @score_label.anchorPoint  = [0, 0]
+    self.addChild @score_label
+
+    @reset_button     = CCMenuItemImage.itemFromNormalImage("Reset.png", selectedImage:"ResetSelected.png", target:self, selector:'reset:')
+    @reset_button.anchorPoint = [1, 0]
+
+    @menu             = CCMenu.menuWithArray [@reset_button]
+    @menu.position    = [320, 0]
+    @menu.anchorPoint = [1, 0]
+    self.addChild @menu
+  end
+
   def setup_scene
     @removed = []
     @blocks = []
     @rows = []
     @cols = []
+    @score = 0
+
     18.times do |y|
       15.times do |x|
         block = build_colored_block(x, y)
@@ -119,6 +139,8 @@ class Stage < CCLayer
         @blocks << block
       end
     end
+
+    refresh_score
   end
 
   def setup_observers
@@ -145,11 +167,13 @@ class Stage < CCLayer
       group_size = group.size
       group.each do |block|
         block.group_touch_ended
+        @removed << block if group_size > 1
+      end
 
-        if group_size > 1
-          @add_score = (group_size - 2)**2
-          @removed << block
-        end
+      # score by group
+      if group_size > 1
+        @score += (group_size - 2)**2
+        refresh_score
       end
     end
   end
@@ -175,6 +199,10 @@ class Stage < CCLayer
     [[-1, 0], [1, 0], [0, -1], [0, 1]].collect do |offset|
       block_at(block.x + offset[0], block.y + offset[1])
     end.compact
+  end
+
+  def refresh_score
+    @score_label.string = "Score: #{@score}"
   end
 
 end
