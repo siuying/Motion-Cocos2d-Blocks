@@ -1,14 +1,21 @@
 class Block < TouchSprite
+  COLORS = [:red, :green, :blue, :yellow]
   BLOCK_TOUCH_BEGIN     = "block.touch.begin"
   BLOCK_TOUCH_CANCELLED = "block.touch.cancelled"
   BLOCK_TOUCH_ENDED     = "block.touch.ended"
   
   attr_accessor :bk_color         # block color, can be one of [:red, :green, yello, blue]
+  attr_accessor :x, :y
 
   def self.with_color(color)
     block = Block.spriteWithFile "block-#{color.to_s}.png"
     block.bk_color = color.to_s
     block
+  end
+
+  def self.with_random_color
+    color = rand(COLORS.length)
+    Block.with_color(COLORS[color])
   end
 
   # when touch begin, change to highlighted color
@@ -26,46 +33,32 @@ class Block < TouchSprite
     self.opacity = 255
   end
 
+  def to_s
+    "<Block #{x},#{y} #{bk_color}>"
+  end
+
   ## CCNode Life Cycle
 
   def onEnter
     super
-
-    nc = App.notification_center
-    @observers = []
-
-    @observers << nc.observe(BLOCK_TOUCH_BEGIN) do |notification|      
-    end
-
-    @observers << nc.observe(BLOCK_TOUCH_CANCELLED) do |notification|
-    end
-
-    @observers << nc.observe(BLOCK_TOUCH_ENDED) do |notification|
-    end
   end
 
   def onExit
     super
-    @observers.each do |o|
-      App.notification_center.unobserve(o)
-    end
   end
 
   ## Override TouchSprite
   # When touch occurs, send events to all blocks with same colors
 
   def touchesBegan(touches, withEvent:event)
-    group_touch_begin
-    App.notification_center.post BLOCK_TOUCH_BEGIN, bk_color
+    App.notification_center.post BLOCK_TOUCH_BEGIN, self
   end
 
   def touchesCancelled(touches, withEvent:event)
-    group_touch_cancelled
-    App.notification_center.post BLOCK_TOUCH_CANCELLED, bk_color
+    App.notification_center.post BLOCK_TOUCH_CANCELLED, self
   end
 
   def touchesEnded(touches, withEvent:event)
-    group_touch_ended
-    App.notification_center.post BLOCK_TOUCH_ENDED, bk_color
+    App.notification_center.post BLOCK_TOUCH_ENDED, self
   end
 end

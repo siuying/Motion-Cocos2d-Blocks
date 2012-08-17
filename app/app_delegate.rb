@@ -1,11 +1,10 @@
 class AppDelegate < Cocos2dAppDelegate
+  attr_reader :scene
+
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     super
 
-    @scene = CCScene.node
-    @scene.addChild Stage.node
-    @scene
-
+    @scene = Stage.node
     director.pushScene @scene
 
     true
