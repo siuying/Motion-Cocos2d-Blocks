@@ -1,9 +1,8 @@
 class Stage < CCLayer
   PAGE_MARGIN = 14.0
 
-  attr_reader :score_label
-  attr_reader :rows, :cols
-  attr_reader :score
+  attr_reader :score_label, :score
+  attr_reader :rows
 
   ## CCNode Life Cycle
 
@@ -24,9 +23,7 @@ class Stage < CCLayer
   def onExit
     super
 
-    @observers.each do |ob|
-      App.notification_center.unobserve ob
-    end
+    teardown_observers
   end
 
   ## Public 
@@ -36,7 +33,6 @@ class Stage < CCLayer
     # remove blocks that is marked to be "remove"
     @removed.each do |block|
       @rows[block.x].delete(block)
-      @cols[block.y].delete(block)
       self.removeChild(block, cleanup:true)
     end
 
@@ -57,6 +53,7 @@ class Stage < CCLayer
 
   # reset the scene
   def reset(sender)
+    App.delegate.sound_engine.playEffect("reset.wav")
     @blocks.each do |block|
       self.removeChild(block, cleanup:true)
     end
@@ -127,7 +124,6 @@ class Stage < CCLayer
     @removed = []
     @blocks = []
     @rows = []
-    @cols = []
     @score = 0
 
     18.times do |y|
@@ -137,9 +133,6 @@ class Stage < CCLayer
 
         @rows[x] ||= []
         @rows[x] << block
-
-        @cols[y] ||= []
-        @cols[y] << block
         @blocks << block
       end
     end
@@ -178,7 +171,16 @@ class Stage < CCLayer
       if group_size > 1
         @score += (group_size - 2)**2
         refresh_score
+        App.delegate.sound_engine.playEffect("complete.wav")
+      else
+        App.delegate.sound_engine.playEffect("blip.wav")
       end
+    end
+  end
+
+  def teardown_observers
+    @observers.each do |ob|
+      App.notification_center.unobserve ob
     end
   end
 
