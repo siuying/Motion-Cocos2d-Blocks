@@ -28,7 +28,7 @@ class Block < TouchSprite
     self.opacity = 255
   end
 
-  # when touch ended, remove this block
+  # when touch ended, revert color
   def group_touch_ended
     self.opacity = 255
   end
@@ -37,18 +37,7 @@ class Block < TouchSprite
     "<Block #{x},#{y} #{bk_color}>"
   end
 
-  ## CCNode Life Cycle
-
-  def onEnter
-    super
-  end
-
-  def onExit
-    super
-  end
-
   ## Override TouchSprite
-  # When touch occurs, send events to all blocks with same colors
 
   def touchesBegan(touches, withEvent:event)
     App.notification_center.post BLOCK_TOUCH_BEGIN, self
